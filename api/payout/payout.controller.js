@@ -1,4 +1,4 @@
-const { all__, single__, add__, update__,remove__,} = require("./withdrawal.services");
+const { all__, single__, add__, update__,remove__,} = require("./payout.services");
 
 
 /**send all the records form table */
@@ -47,12 +47,11 @@ if (isRecord && isRecord.length) {
  */
 
 const Add__ = async (request, response) => {
-  let {user_type,user_id,amount,account,ifsc_code,reference_id,status} =request.body;
-  if (user_type==undefined || user_id==undefined || amount==undefined || account==undefined || ifsc_code==undefined)
+    const{invesment_id,account_no,ifsc_code,amount,user_id,user_type,transaction_id,status}=request.body;
+    if(invesment_id==undefined || account_no==undefined ||ifsc_code==undefined || amount==undefined || user_id==undefined ||user_type==undefined ||transaction_id==undefined  || status==undefined)
     response.status(404).json({ message: "invalid data" });
   else {
-    let temp={...request.body,reference_id:(reference_id==undefined?null:reference_id),status:(status==undefined?0:status)}
-    let result = await add__(temp);
+    let result = await add__(request.body);
     if (!result)
       response.status(400).json({ message: "Internal Server Error" });
     else response.status(200).json({ ...request.body, id: result.insertId });
@@ -73,23 +72,27 @@ const Update__ = async (request, response) => {
     let newData = request.body;
 
     ///////////////////**Compare & Update ///////////////////////
-    if(newData.user_type!=undefined && newData.user_type!=oldData.user_type)
-    oldData={...oldData,user_type:newData.user_type};
+//invesment_id,account_no,ifsc_code,,,,,
+    if(newData.invesment_id!=undefined && newData.invesment_id!=oldData.invesment_id)
+    oldData={...oldData,invesment_id:newData.invesment_id};
 
-    if(newData.user_id!=undefined && newData.user_id!=oldData.user_id)
-    oldData={...oldData,user_id:newData.user_id};
-
-    if(newData.amount!=undefined && newData.amount!=oldData.amount)
-    oldData={...oldData,amount:newData.amount};
-
-    if(newData.account!=undefined && newData.account!=oldData.account)
-    oldData={...oldData,account:newData.account};
+    if(newData.account_no!=undefined && newData.account_no!=oldData.account_no)
+    oldData={...oldData,account_no:newData.account_no};
 
     if(newData.ifsc_code!=undefined && newData.ifsc_code!=oldData.ifsc_code)
     oldData={...oldData,ifsc_code:newData.ifsc_code};
 
-    if(newData.reference_id!=undefined && newData.reference_id!=oldData.reference_id)
-    oldData={...oldData,reference_id:newData.reference_id};
+    if(newData.user_type!=undefined && newData.user_type!=oldData.user_type)
+    oldData={...oldData,user_type:newData.user_type};
+
+    if(newData.amount!=undefined && newData.amount!=oldData.amount)
+    oldData={...oldData,amount:newData.amount};
+
+    if(newData.user_id!=undefined && newData.user_id!=oldData.user_id)
+    oldData={...oldData,user_id:newData.user_id};
+
+    if(newData.transaction_id!=undefined && newData.transaction_id!=oldData.transaction_id)
+    oldData={...oldData,transaction_id:newData.transaction_id};
 
     if(newData.status!=undefined && newData.status!=oldData.status)
     oldData={...oldData,status:newData.status};

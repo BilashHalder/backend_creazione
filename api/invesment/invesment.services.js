@@ -7,7 +7,7 @@ const mysql = require("mysql2/promise");
  ****/
 
 let addQuery = "INSERT INTO investment(user_id,user_type,ammount,roi,nominee_id,account_no,payment_id,agreement_file, status,is_send,referral_id) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-let updateQuery = "UPDATE investment SET user_id=?,user_type=?,ammount=?,roi=?,nominee_id=?,account_no=?,payment_id=?,agreement_file=?status=?is_send=?,referral_id=? WHERE id=?";
+let updateQuery = "UPDATE investment SET user_id=?,user_type=?,ammount=?,roi=?,nominee_id=?,account_no=?,payment_id=?,agreement_file=?,status=?,is_send=?,referral_id=? WHERE id=?";
 let allQuery = "SELECT * FROM investment";
 let signleQuery = "SELECT * FROM investment WHERE id=?";
 let removeQuery = "DELETE FROM investment WHERE id=?";
@@ -21,6 +21,7 @@ const add__ = async (data) => {
       const [rows, fields] = await connection.execute(addQuery, [user_id,user_type,ammount,roi,nominee_id,account_no,payment_id,agreement_file, status,is_send,referral_id]);
       return rows;
     } catch (error) {
+      console.log(error)
       return false;
     } finally {
       connection.end();
@@ -57,13 +58,15 @@ const single__ = async (id) => {
 
 
   const update__ = async (data) => {
-    let {basic,hra,conveyance,medical,special,pf,insurance,tax,id}=data;
+    console.log(data)
+    let {user_id,user_type,ammount,roi,nominee_id,account_no,payment_id,agreement_file, status,is_send,referral_id,id}=data;
     let connection = await mysql.createConnection(dbconfig);
     try {
       connection = await mysql.createConnection(dbconfig);
-      const [rows, fields] = await connection.execute(updateQuery, [basic,hra,conveyance,medical,special,pf,insurance,tax,id]);
+      const [rows, fields] = await connection.execute(updateQuery, [user_id,user_type,ammount,roi,nominee_id,account_no,payment_id,agreement_file, status,is_send,referral_id,id]);
       return rows;
     } catch (error) {
+      console.log(error)
       return false;
     } finally {
       connection.end();

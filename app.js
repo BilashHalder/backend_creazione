@@ -42,7 +42,10 @@ const KycRouter=require('./api/kyc/kyc.route');
 const NomineeRouter=require('./api/nominee/nominee.route');
 const QualificationRouter=require('./api/qualification/qualification.route');
 
-// const PayoutRouter=require('./api/payout/payout.route');
+const PayoutRouter=require('./api/payout/payout.route');
+const DepositRouter=require('./api/deposit/deposit.route');
+const InvesmentRouter=require('./api/invesment/invesment.route');
+const WithdrwalRouter=require('./api/withdrawal/withdrawal.route');
 
 
 
@@ -76,9 +79,10 @@ app.use("/api/request",RequestRouter);
 app.use("/api/emp_info",EmployeeInfoRouter);
 app.use("/api/kyc",KycRouter);
 app.use("/api/qualification",QualificationRouter);
-
-
-// app.use("/api/payout",PayoutRouter);
+app.use("/api/deposit",DepositRouter);
+app.use("/api/invesment",InvesmentRouter);
+app.use("/api/payout",PayoutRouter);
+app.use("/api/withdrawal",WithdrwalRouter);
 
 
 

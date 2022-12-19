@@ -1,4 +1,4 @@
-const { all__, single__, add__, update__,remove__,} = require("./deposit.services");
+const { all__, single__, add__, update__,remove__,isexist__} = require("./deposit.services");
 const { imageValidation, imageUpload } = require('../../util/others');
 
 /**send all the records form table */
@@ -49,15 +49,26 @@ if (isRecord && isRecord.length) {
 const Add__ = async (request, response) => {
     const{mode, doc, reference, amount, user_id, user_type}=request.body;
 
-    if(mode==undefined || reference==undefined ||amount==undefined || user_id==undefined || user_type==undefined )
-    response.status(400).json({ message: "Invalid Request" });
+    if(mode==undefined|| reference==undefined ||amount==undefined || user_id==undefined || user_type==undefined )
+    response.status(400).json({ message: "Invalid Data" });
   else {
     let data={mode, reference,user_type,user_id,amount,status:0}
-    
-    let result = await add__(request.body);
+   let flag=await isexist__(reference);
+   if(!flag || flag.length==0){
+    if(request.files && request.files.doc){
+      let fu = imageUpload(request.files.doc);
+      data.doc=fu;
+    }
+    else 
+    data.doc="";
+    let result = await add__(data);
     if (!result)
       response.status(400).json({ message: "Internal Server Error" });
-    else response.status(200).json({ ...request.body, id: result.insertId });
+    else response.status(200).json({ ...data, id: result.insertId });
+   }
+   else{
+    response.status(400).json({ message: "Transaction Already Used" });
+   }
   }
 };
 
@@ -75,7 +86,21 @@ const Update__ = async (request, response) => {
     let newData = request.body;
 
     ///////////////////**Compare & Update ///////////////////////
+    if(newData.user_id!=undefined && newData.user_id!=oldData.user_id)
+    oldData={...oldData,user_id:newData.user_id};
 
+    if(newData.user_type!=undefined && newData.user_type!=oldData.user_type)
+    oldData={...oldData,user_type:newData.user_type};
+
+    if(newData.remarks!=undefined && newData.remarks!=oldData.remarks)
+    oldData={...oldData,remarks:newData.remarks};
+
+    if(newData.amount!=undefined && newData.amount!=oldData.amount)
+    oldData={...oldData,amount:newData.amount};
+
+    if(newData.status!=undefined && newData.status!=oldData.status)
+    oldData={...oldData,status:newData.status};
+    
 
     ////////////////////////////////////////
 
