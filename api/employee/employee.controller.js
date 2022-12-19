@@ -1,17 +1,17 @@
-const {all__,single__,add__,update__,remove__,isexist__,balanceupdate__} = require("./associate.services");
+const {all__,single__,add__,update__,remove__,isexist__,balanceupdate__} = require("./employee.services");
 const { imageValidation, imageUpload } = require('../../util/others');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const {uid}=require('uid');
-const {sendEmail,associateNewAccount}=require('../../util/emails')
+const {sendEmail,EmployeeNewAccount}=require('../../util/emails')
 
 /**
  * Add New record in the table
  */
 
 const Add__ = async (request, response) => {
-    let { name,gender,email,commission_rate,employee_id,phone } = request.body;
-    if (name == undefined || gender == undefined || email == undefined ||commission_rate==undefined||employee_id==undefined|| phone == undefined )
+    let { name,gender,email,phone } = request.body;
+    if (name == undefined || gender == undefined || email == undefined || phone == undefined )
     response.status(404).json({ message: "Invalid Data" });
     else if (request.files == null)
     response.status(404).json({ message: invalidrequest });
@@ -19,7 +19,7 @@ const Add__ = async (request, response) => {
     response.status(404).json({ message: invalidrequest });
   else {
     let img = request.files.image;
-    let obj = { name,gender,email,commission_rate,employee_id,phone };
+    let obj = { name,gender,email,phone };
 
     let flag=await isexist__({email,phone});
     if(flag && flag.length)
@@ -27,7 +27,6 @@ const Add__ = async (request, response) => {
     else{
         obj.balance = 0;
         obj.pass = bcrypt.hashSync('123456', saltRounds);
-        obj.referral_key=uid(10);
         obj.status = 1;
         if (!imageValidation(img))
         response.status(400).json({ message: imageerror });
@@ -35,11 +34,12 @@ const Add__ = async (request, response) => {
           let fu = await imageUpload(img);
           obj.image=fu;
           let result = await add__(obj);
+          console.log(result)
           if (!result)
           response.status(400).json({ message: "Internal Server Error " });
           else
          {
-          sendEmail(obj.email,"Your Associate Account Created",associateNewAccount(obj))
+          sendEmail(obj.email,"Your Employee Account Created",EmployeeNewAccount(obj))
           response.status(200).json({ ...obj, id: result.insertId });
          }
       }

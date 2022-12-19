@@ -11,7 +11,7 @@ let updateQuery = "UPDATE kyc SET adhar_no=?,pan_no=?,address=?,adhar_verified=?
 let allQuery = "SELECT * FROM kyc";
 let signleQuery = "SELECT * FROM kyc WHERE id=?";
 let removeQuery = "DELETE FROM kyc WHERE id=?";
-
+let isExistQuery = "SELECT * FROM kyc WHERE user_type=? AND user_type=?";
 
 const add__ = async (data) => {
     let {adhar_no,pan_no,address,adhar_verified,pan_verified,user_id,user_type}=data;
@@ -84,4 +84,19 @@ const single__ = async (id) => {
     }
   };
 
-module.exports = { all__,single__,add__,update__,remove__ };
+  const isexist__ = async (data) => {
+    const {user_id,user_type}=data;
+    let connection = await mysql.createConnection(dbconfig);
+    try {
+      connection = await mysql.createConnection(dbconfig);
+      const [rows, fields] = await connection.execute(isExistQuery, [user_id,user_type]);
+      return rows;
+    } catch (error) {
+      return false;
+    } finally {
+      connection.end();
+    }
+  };
+
+
+module.exports = { all__,single__,add__,update__,remove__,isexist__ };

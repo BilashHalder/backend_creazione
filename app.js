@@ -27,19 +27,20 @@ app.use(fileUpload());
 
 
 const AssociateRouter=require('./api/associate/associate.route');
-// const DesignationRouter=require('./api/designation/designation.route');
+const CustomerRouter=require('./api/customer/customer.route');
+const DesignationRouter=require('./api/designation/designation.route');
 const SalaryRouter=require('./api/salary/salary.route');
-// const LeaveRouter=require('./api/leave/leave.route');
-// const HolidaysRouter=require('./api/holidays/holidays.router');
-
-
-
+const EmployeeRouter=require('./api/employee/employee.route');
+const HolidaysRouter=require('./api/holiday/holiday.route');
+const LeaveRouter=require('./api/leave/leave.route');
+const RequestRouter=require('./api/request/request.route')
 
 
 const BankAccountRouter=require('./api/account/account.route');
-// const KycRouter=require('./api/kyc/kyc.route');
-// const NomineeRouter=require('./api/nominee/nominee.route');
-// const QualificationRouter=require('./api/qualification/qualification.route');
+const EmployeeInfoRouter=require('./api/employee_info/employee_info.route');
+const KycRouter=require('./api/kyc/kyc.route');
+const NomineeRouter=require('./api/nominee/nominee.route');
+const QualificationRouter=require('./api/qualification/qualification.route');
 
 // const PayoutRouter=require('./api/payout/payout.route');
 
@@ -63,16 +64,18 @@ const BankAccountRouter=require('./api/account/account.route');
 
 
 app.use("/api/associate",AssociateRouter);
+app.use("/api/customer",CustomerRouter);
 app.use("/api/salary",SalaryRouter);
-// app.use("/api/leave",LeaveRouter);
-// app.use("/api/designation",DesignationRouter);
-// app.use("/api/holiday",HolidaysRouter);
-
-
+app.use("/api/employee",EmployeeRouter);
+app.use("/api/designation",DesignationRouter);
+app.use("/api/holiday",HolidaysRouter);
+app.use("/api/leave",LeaveRouter);
 app.use("/api/account",BankAccountRouter);
-// app.use("/api/kyc",KycRouter);
-// app.use("/api/nominee",NomineeRouter);
-// app.use("/api/qualification",QualificationRouter);
+app.use("/api/nominee",NomineeRouter);
+app.use("/api/request",RequestRouter);
+app.use("/api/emp_info",EmployeeInfoRouter);
+app.use("/api/kyc",KycRouter);
+app.use("/api/qualification",QualificationRouter);
 
 
 // app.use("/api/payout",PayoutRouter);
@@ -127,7 +130,7 @@ app.all("*", (request, response) => {
 
 
 // Server setup & test
-app.listen(process.env.SERVER_PORT, async () => {
+app.listen(8000, async () => {
 console.log(process.env.ENV_TEST);
 const connection = await mysql.createConnection(dbconfig);
 try {
@@ -137,5 +140,5 @@ try {
     console.log(`Mysql Server Not Connected ${error.code}`);
 }
 connection.end();
-console.log(`Api Server Running  on PORT No ${process.env.SERVER_PORT}...`);
+console.log(`Api Server Running  on PORT No ${8000}...`);
 });

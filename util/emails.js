@@ -353,7 +353,44 @@ const resetTemplate=()=>{
     </html>`
 }
 
-module.exports={sendEmail,resetTemplate}
+
+
+const associateNewAccount=(data)=>{
+return `
+
+<h2>Hi,${data.name} Your Account Created Successfully</h2>
+<p>You Can Log in using Your Phone no Or Email id</p>
+<p>Your Default Password Is : 123456</p>
+<span>Please Change Your Password</span>
+<p>Thank You</p>
+`;
+}
+
+
+const customerNewAccount=(data)=>{
+    return `
+    
+    <h2>Hi,${data.name} Your Account Created Successfully</h2>
+    <p>You Can Log in using Your Phone no Or Email id</p>
+    <p>Your Default Password Is : 123456</p>
+    <span>Please Change Your Password</span>
+    <p>Thank You</p>
+    `;
+    }
+
+
+    const EmployeeNewAccount=(data)=>{
+        return `
+        
+        <h2>Hi,${data.name} Your Account Created Successfully</h2>
+        <p>You Can Log in using Your Phone no Or Email id</p>
+        <p>Your Default Password Is : 123456</p>
+        <span>Please Change Your Password</span>
+        <p>Thank You</p>
+        `;
+        }
+    
+module.exports={sendEmail,resetTemplate,associateNewAccount,customerNewAccount,EmployeeNewAccount}
 
 //Generate HTML Functions
 /**

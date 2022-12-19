@@ -13,7 +13,7 @@ let updateQuery = "UPDATE associate SET name=?,gender=?,email=?,commission_rate=
 let allQuery = "SELECT * FROM associate";
 let signleQuery = "SELECT * FROM associate WHERE id=?";
 let removeQuery = "DELETE FROM associate WHERE id=?";
-let emailphoneQuery = "SELECT * FROM associate email=? OR phone=?";
+let emailphoneQuery = "SELECT * FROM associate WHERE email=? OR phone=?";
 let balanceUpdateQuery = "UPDATE associate SET balance=? WHERE id=?";
 
 
@@ -26,10 +26,8 @@ const add__ = async (data) => {
       const [rows, fields] = await connection.execute(addQuery, [name,gender,email,commission_rate,employee_id,phone,balance,pass,image, status, referral_key]);
       return rows;
     } catch (error) {
-      console.log(error)
       return false;
     } finally {
-      console.log('query')
       connection.end();
     }
   };
@@ -69,6 +67,7 @@ const single__ = async (id) => {
     let connection = await mysql.createConnection(dbconfig);
     try {
       connection = await mysql.createConnection(dbconfig);
+
       const [rows, fields] = await connection.execute(updateQuery, [name,gender,email,commission_rate,employee_id,phone,balance,pass,image, status, referral_key,id]);
       return rows;
     } catch (error) {
@@ -93,6 +92,7 @@ const single__ = async (id) => {
   };
 
   const isexist__ = async (data) => {
+    console.log(data)
     const {email,phone}=data;
     let connection = await mysql.createConnection(dbconfig);
     try {
@@ -100,6 +100,7 @@ const single__ = async (id) => {
       const [rows, fields] = await connection.execute(emailphoneQuery, [email,phone]);
       return rows;
     } catch (error) {
+      console.log(error)
       return false;
     } finally {
       connection.end();

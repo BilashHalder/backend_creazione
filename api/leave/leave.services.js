@@ -49,6 +49,7 @@ const single__ = async (id) => {
       const [rows, fields] = await connection.execute(signleQuery, [id]);
       return rows;
     } catch (error) {
+      console.log(error)
       return false;
     } finally {
       connection.end();

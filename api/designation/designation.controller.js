@@ -1,4 +1,4 @@
-const { all__, single__, add__, update__,remove__,} = require("./salary.services");
+const { all__, single__, add__, update__,remove__,} = require("./designation.services");
 
 
 /**send all the records form table */
@@ -14,12 +14,18 @@ const All__ = async (request, response) => {
 
 /**send single record that matched by given pramas */
 const Single__ = async (request, response) => {
-  let data = await single__(request.params.id);
-  if (!(data)) 
-  response.status(400).json({ message: "Internal Server Error" });
-  else if (data.length == 0)
-    response.status(404).json({ message: "No Data Found" });
-  else response.json(data[0]);
+    if(isNaN(request.params.id))
+    response.status(400).json({ message: "Invalid Id" });
+    else{
+        let data = await single__(request.params.id);
+        if(!data)
+        response.status(400).json({ message: "Internal Server Error" });
+        else if (data.length == 0)
+        response.status(404).json({ message: "No Data Found" });
+             else response.json(data[0]);
+
+    }
+  
 };
 
 
@@ -47,9 +53,8 @@ if (isRecord && isRecord.length) {
  */
 
 const Add__ = async (request, response) => {
-  let { basic, hra, conveyance, medical, special, pf, insurance, tax } =request.body;
-
-  if (basic==undefined || hra==undefined || conveyance==undefined || medical==undefined || special==undefined ||  pf==undefined || insurance==undefined ||  tax==undefined)
+  let { title} =request.body;
+  if (title==undefined)
     response.status(404).json({ message: "invalid data" });
   else {
     let result = await add__(request.body);
@@ -74,7 +79,8 @@ const Update__ = async (request, response) => {
 
     ///////////////////**Compare & Update ///////////////////////
 
-
+    if (newData.title != undefined && newData.title != oldData.title)
+    oldData = { ...oldData, title: newData.title };
     ////////////////////////////////////////
 
     let result = await update__(oldData);

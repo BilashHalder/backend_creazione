@@ -1,17 +1,17 @@
-const {all__,single__,add__,update__,remove__,isexist__,balanceupdate__} = require("./associate.services");
+const {all__,single__,add__,update__,remove__,isexist__,balanceupdate__} = require("./customer.services");
 const { imageValidation, imageUpload } = require('../../util/others');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const {uid}=require('uid');
-const {sendEmail,associateNewAccount}=require('../../util/emails')
+const {sendEmail,customerNewAccount}=require('../../util/emails')
 
 /**
  * Add New record in the table
  */
 
 const Add__ = async (request, response) => {
-    let { name,gender,email,commission_rate,employee_id,phone } = request.body;
-    if (name == undefined || gender == undefined || email == undefined ||commission_rate==undefined||employee_id==undefined|| phone == undefined )
+    let { name,gender,email,commission_rate,employee_id,phone ,referred_by} = request.body;
+    if (name == undefined || gender == undefined || email == undefined || phone == undefined )
     response.status(404).json({ message: "Invalid Data" });
     else if (request.files == null)
     response.status(404).json({ message: invalidrequest });
@@ -29,6 +29,7 @@ const Add__ = async (request, response) => {
         obj.pass = bcrypt.hashSync('123456', saltRounds);
         obj.referral_key=uid(10);
         obj.status = 1;
+        referred_by?obj.referred_by=referred_by:obj.referred_by='admin';
         if (!imageValidation(img))
         response.status(400).json({ message: imageerror });
          else{
@@ -39,7 +40,7 @@ const Add__ = async (request, response) => {
           response.status(400).json({ message: "Internal Server Error " });
           else
          {
-          sendEmail(obj.email,"Your Associate Account Created",associateNewAccount(obj))
+          sendEmail(obj.email,"Your Account Created Creazione Group",customerNewAccount(obj))
           response.status(200).json({ ...obj, id: result.insertId });
          }
       }
@@ -57,35 +58,27 @@ const Update__ = async (request, response) => {
   if (isRecord && isRecord.length) {
     let oldData = isRecord[0];
     let newData = request.body;
-console.log('new data',newData)
+
     ///////////////////**Compare & Update ///////////////////////
-    if (newData.name != undefined && newData.name != oldData.name)
-    oldData = { ...oldData, name: newData.name };
+      if (newData.name != undefined && newData.name != oldData.name)
+          oldData = { ...oldData, name: newData.name };
 
-  if (newData.gender != undefined && newData.gender != oldData.gender)
-    oldData = { ...oldData, gender: newData.gender }
+      if (newData.gender != undefined && newData.gender != oldData.gender)
+          oldData = { ...oldData, gender: newData.gender }
 
-  if (newData.email != undefined && newData.email != oldData.email)
-    oldData = { ...oldData, email: newData.email }
+      if (newData.email != undefined && newData.email != oldData.email)
+          oldData = { ...oldData, email: newData.email }
 
-    if (newData.commission_rate != undefined && newData.commission_rate != oldData.commission_rate)
-    oldData = { ...oldData, commission_rate: newData.commission_rate }
+      if (newData.phone != undefined && newData.phone != oldData.phone)
+          oldData = { ...oldData, phone: newData.phone }
+      if (newData.status != undefined && newData.status != oldData.status)
+          oldData = { ...oldData, status: parseInt(newData.status) }
 
-    if (newData.employee_id != undefined && newData.employee_id != oldData.employee_id)
-    oldData = { ...oldData, employee_id: newData.employee_id }
+      if (newData.referred_by != undefined && newData.referred_by != oldData.referred_by)
+          oldData = { ...oldData, referred_by: newData.referred_by }
 
-    if (newData.referral_key != undefined && newData.referral_key != oldData.referral_key)
-    oldData = { ...oldData, referral_key: newData.referral_key }
-    
-  if (newData.phone != undefined && newData.phone != oldData.phone)
-    oldData = { ...oldData, phone: newData.phone }
-
-  if (newData.status != undefined && newData.status != oldData.status)
-    oldData = { ...oldData, status: parseInt(newData.status) }
-
-
-  if (newData.referral_key != undefined && newData.referral_key != oldData.referral_key)
-    oldData = { ...oldData, referral_key: newData.referral_key }
+      if (newData.referral_key != undefined && newData.referral_key != oldData.referral_key)
+          oldData = { ...oldData, referral_key: newData.referral_key }
 
 
     if (request.files && request.files.image) {

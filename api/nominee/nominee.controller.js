@@ -1,4 +1,4 @@
-const { all__, single__, add__, update__,remove__,} = require("./salary.services");
+const { all__, single__, add__, update__,remove__,} = require("./nominee.services");
 
 
 /**send all the records form table */
@@ -47,9 +47,8 @@ if (isRecord && isRecord.length) {
  */
 
 const Add__ = async (request, response) => {
-  let { basic, hra, conveyance, medical, special, pf, insurance, tax } =request.body;
-
-  if (basic==undefined || hra==undefined || conveyance==undefined || medical==undefined || special==undefined ||  pf==undefined || insurance==undefined ||  tax==undefined)
+    const{name, dob, user_id, user_type}=request.body;
+    if(name==undefined || dob==undefined ||user_id==undefined || user_type==undefined )
     response.status(404).json({ message: "invalid data" });
   else {
     let result = await add__(request.body);
@@ -74,6 +73,20 @@ const Update__ = async (request, response) => {
 
     ///////////////////**Compare & Update ///////////////////////
 
+    if(newData.name!=undefined && newData.name!=oldData.name)
+    oldData={...oldData,name:newData.name};
+
+    if(newData.dob!=undefined && newData.dob!=oldData.dob)
+    oldData={...oldData,dob:newData.dob};
+
+    if(newData.user_id!=undefined && newData.user_id!=oldData.user_id)
+    oldData={...oldData,user_id:newData.user_id};
+
+    if(newData.user_type!=undefined && newData.user_type!=oldData.user_type)
+    oldData={...oldData,user_type:newData.user_type};
+
+    if(newData.status!=undefined && newData.status!=oldData.status)
+    oldData={...oldData,status:newData.status};
 
     ////////////////////////////////////////
 

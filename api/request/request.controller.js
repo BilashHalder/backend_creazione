@@ -1,4 +1,4 @@
-const { all__, single__, add__, update__,remove__,} = require("./salary.services");
+const { all__, single__, add__, update__,remove__,} = require("./request.services");
 
 
 /**send all the records form table */
@@ -14,12 +14,18 @@ const All__ = async (request, response) => {
 
 /**send single record that matched by given pramas */
 const Single__ = async (request, response) => {
-  let data = await single__(request.params.id);
-  if (!(data)) 
-  response.status(400).json({ message: "Internal Server Error" });
-  else if (data.length == 0)
-    response.status(404).json({ message: "No Data Found" });
-  else response.json(data[0]);
+    if(isNaN(request.params.id))
+    response.status(400).json({ message: "Invalid Id" });
+    else{
+        let data = await single__(request.params.id);
+        if(!data)
+        response.status(400).json({ message: "Internal Server Error" });
+        else if (data.length == 0)
+        response.status(404).json({ message: "No Data Found" });
+             else response.json(data[0]);
+
+    }
+  
 };
 
 
@@ -47,9 +53,8 @@ if (isRecord && isRecord.length) {
  */
 
 const Add__ = async (request, response) => {
-  let { basic, hra, conveyance, medical, special, pf, insurance, tax } =request.body;
-
-  if (basic==undefined || hra==undefined || conveyance==undefined || medical==undefined || special==undefined ||  pf==undefined || insurance==undefined ||  tax==undefined)
+    let {name, subject, message, email,phone, request_type }=request.body;
+    if(!(name)||!(phone)||!(subject)||!(message) || !email || !request_type)
     response.status(404).json({ message: "invalid data" });
   else {
     let result = await add__(request.body);
@@ -74,6 +79,30 @@ const Update__ = async (request, response) => {
 
     ///////////////////**Compare & Update ///////////////////////
 
+    if(newData.name!=undefined && newData.name!=oldData.name)
+        oldData={...oldData,name:newData.name};
+
+        if(newData.phone!=undefined && newData.phone!=oldData.phone)
+        oldData={...oldData,phone:newData.phone};
+
+        if(newData.email!=undefined && newData.email!=oldData.email)
+        oldData={...oldData,email:newData.email};
+
+        if(newData.subject!=undefined && newData.subject!=oldData.subject)
+        oldData={...oldData,subject:newData.subject};
+
+
+        if(newData.message!=undefined && newData.message!=oldData.message)
+        oldData={...oldData,message:newData.message};
+
+        if(newData.status!=undefined && newData.status!=oldData.status)
+        oldData={...oldData,status:newData.status};
+
+        if(newData.request_type!=undefined && newData.request_type!=oldData.request_type)
+        oldData={...oldData,request_type:newData.request_type};
+
+        if(newData.remarks!=undefined && newData.remarks!=oldData.remarks)
+        oldData={...oldData,remarks:newData.remarks};
 
     ////////////////////////////////////////
 

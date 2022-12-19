@@ -1,4 +1,4 @@
-const { all__, single__, add__, update__,remove__,} = require("./salary.services");
+const { all__, single__, add__, update__,remove__,} = require("./leave.services");
 
 
 /**send all the records form table */
@@ -47,9 +47,10 @@ if (isRecord && isRecord.length) {
  */
 
 const Add__ = async (request, response) => {
-  let { basic, hra, conveyance, medical, special, pf, insurance, tax } =request.body;
+    let {annual, casual, sick, bereavement,maternity, others}=request.body;
+    console.log(request.body)
 
-  if (basic==undefined || hra==undefined || conveyance==undefined || medical==undefined || special==undefined ||  pf==undefined || insurance==undefined ||  tax==undefined)
+    if(annual==undefined || casual==undefined || sick==undefined || bereavement==undefined || others==undefined||maternity==undefined)
     response.status(404).json({ message: "invalid data" });
   else {
     let result = await add__(request.body);
@@ -74,6 +75,22 @@ const Update__ = async (request, response) => {
 
     ///////////////////**Compare & Update ///////////////////////
 
+    if(newData.annual!=undefined && newData.annual!=oldData.annual)
+    oldData={...oldData,annual:newData.annual};
+
+    if(newData.casual!=undefined && newData.casual!=oldData.casual)
+    oldData={...oldData,casual:newData.casual};
+
+
+    if(newData.sick!=undefined && newData.sick!=oldData.sick)
+    oldData={...oldData,sick:newData.sick};
+
+
+    if(newData.bereavement!=undefined && newData.bereavement!=oldData.bereavement)
+    oldData={...oldData,bereavement:newData.bereavement};
+
+    if(newData.others!=undefined && newData.others!=oldData.others)
+    oldData={...oldData,others:newData.others};
 
     ////////////////////////////////////////
 

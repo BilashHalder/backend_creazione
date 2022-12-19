@@ -1,5 +1,5 @@
-const { all__, single__, add__, update__,remove__,} = require("./salary.services");
-
+const { all__, single__, add__, update__,remove__,} = require("./deposit.services");
+const { imageValidation, imageUpload } = require('../../util/others');
 
 /**send all the records form table */
 const All__ = async (request, response) => {
@@ -47,11 +47,13 @@ if (isRecord && isRecord.length) {
  */
 
 const Add__ = async (request, response) => {
-  let { basic, hra, conveyance, medical, special, pf, insurance, tax } =request.body;
+    const{mode, doc, reference, amount, user_id, user_type}=request.body;
 
-  if (basic==undefined || hra==undefined || conveyance==undefined || medical==undefined || special==undefined ||  pf==undefined || insurance==undefined ||  tax==undefined)
-    response.status(404).json({ message: "invalid data" });
+    if(mode==undefined || reference==undefined ||amount==undefined || user_id==undefined || user_type==undefined )
+    response.status(400).json({ message: "Invalid Request" });
   else {
+    let data={mode, reference,user_type,user_id,amount,status:0}
+    
     let result = await add__(request.body);
     if (!result)
       response.status(400).json({ message: "Internal Server Error" });

@@ -7,7 +7,7 @@ const mysql = require("mysql2/promise");
  ****/
 
 let addQuery = "INSERT INTO holidays(title, h_date) VALUES (?,?)";
-let updateQuery = "UPDATE holidays SET title=?h_date=? WHERE id=?";
+let updateQuery = "UPDATE holidays SET title=?,h_date=? WHERE id=?";
 let allQuery = "SELECT * FROM holidays";
 let signleQuery = "SELECT * FROM holidays WHERE id=?";
 let removeQuery = "DELETE FROM holidays WHERE id=?";

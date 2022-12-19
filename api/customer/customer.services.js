@@ -11,7 +11,7 @@ let updateQuery = "UPDATE customer SET name=?,gender=?,email=?,phone=?,balance=?
 let allQuery = "SELECT * FROM customer";
 let signleQuery = "SELECT * FROM customer WHERE id=?";
 let removeQuery = "DELETE FROM customer WHERE id=?";
-let emailphoneQuery = "SELECT * FROM customer email=? OR phone=?";
+let emailphoneQuery = "SELECT * FROM customer WHERE email=? OR phone=?";
 let balanceUpdateQuery = "UPDATE customer SET balance=? WHERE id=?";
 
 
@@ -88,11 +88,12 @@ const single__ = async (id) => {
     }
   };
 
-  const isexist__ = async (emailphone) => {
+  const isexist__ = async (data) => {
+    const {email,phone}=data;
     let connection = await mysql.createConnection(dbconfig);
     try {
       connection = await mysql.createConnection(dbconfig);
-      const [rows, fields] = await connection.execute(emailphoneQuery, [emailphone,emailphone]);
+      const [rows, fields] = await connection.execute(emailphoneQuery, [email,phone]);
       return rows;
     } catch (error) {
       return false;
